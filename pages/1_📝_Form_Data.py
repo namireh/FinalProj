@@ -75,6 +75,7 @@ with st.form("credit_data_form"):
     
     # Submit button
     submit_button = st.form_submit_button("Submit")
+
     
 # Process the form data on submission
 if submit_button:
@@ -90,17 +91,17 @@ if submit_button:
 
 
 st.session_state.form_data = {
-    "credit_policy": credit_policy,
+    "credit.policy": 1 if credit_policy == "Yes" else 0,
     "purpose": purpose,
-    "int_rate": int_rate,
+    "int.rate": int_rate,
     "installment": installment,
-    "log_annual_inc": log_annual_inc,
+    "log.annual.inc": log_annual_inc,
     "dti": dti,
     "fico": fico,
-    "days_with_cr_line": days_with_cr_line,
-    "revol_bal": revol_bal,
-    "revol_util": revol_util,
-    "inq_last_6mths": inq_last_6mths,
-    "delinq_2yrs": delinq_2yrs,
-    "pub_rec": pub_rec,
+    "days.with.cr.line": days_with_cr_line,
+    "revol.bal": revol_bal,
+    "revol.util": revol_util,
+    "inq.last.6mths": inq_last_6mths,
+    "delinq.2yrs": delinq_2yrs,
+    "pub.rec": pub_rec,
 }
