@@ -30,7 +30,7 @@ st.markdown(
 )
 
 
-st.image('loan1.jpg')
+st.image('loan1.jpg', use_column_width=True)
 
 # Sidebar navigation header
 with st.sidebar:
