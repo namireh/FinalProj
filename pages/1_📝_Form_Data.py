@@ -72,6 +72,7 @@ with st.form("credit_data_form"):
     inq_last_6mths = st.number_input("Inquiries in Last 6 Months", min_value=0, step=1)
     delinq_2yrs = st.number_input("Delinquencies in Last 2 Years", min_value=0, step=1)
     pub_rec = st.number_input("Public Derogatory Records", min_value=0, step=1)
+    ML_model = st.selectbox("Choose an ML model to run the data through", options = ["Decision Tree", "Random Forest", "ADA Boost", "XGBoost","Soft Voting (Recomended)"])
     
     # Submit button
     submit_button = st.form_submit_button("Submit")
@@ -104,4 +105,5 @@ st.session_state.form_data = {
     "inq.last.6mths": inq_last_6mths,
     "delinq.2yrs": delinq_2yrs,
     "pub.rec": pub_rec,
+    "Model": ML_model
 }

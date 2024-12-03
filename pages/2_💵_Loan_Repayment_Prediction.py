@@ -1,5 +1,6 @@
 import streamlit as st
 import numpy as np
+import pandas as pd
 
 st.set_page_config(page_title="Loan Repayment Prediction", page_icon="💵")
 
@@ -28,6 +29,21 @@ if "form_data" not in st.session_state:
 
 # Accessing form data from Session State
 form_data = st.session_state.form_data
+
+
+
+df_main = pd.read_csv('loan_data.csv')
+df_main.drop(columns = "credit.policy")
+df_main.concat(form_data)
+
+pd.get_dummies(df_main)
+
+X_encoded = df_main.tail(1)
+
+print(X_encoded)
+
+
+
 
 # Display the submitted form data (Optional)
 st.write("### Submitted Borrower Details:")
