@@ -9,7 +9,6 @@ warnings.filterwarnings('ignore')
 st.set_page_config(
     page_title = "Loan Predictor",
     page_icon = "💰",
-    # layout = "wide"
 )   
 
 # Centered Title using HTML and Markdown
@@ -30,7 +29,7 @@ st.markdown(
     unsafe_allow_html = True,
 )
 
-# Insert an image
+
 st.image('loan1.jpg')
 
 # Sidebar navigation header

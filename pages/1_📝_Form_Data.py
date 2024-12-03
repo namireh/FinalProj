@@ -3,12 +3,14 @@ import pandas as pd
 
 st.set_page_config(page_title="Credit Risk Assessment", page_icon="💳")
 
-
+# Initialize session state for form data and mode if not already set
 if "form_data" not in st.session_state:
     st.session_state.form_data = {}
 
-if "mode" not in st.session_state:
-    st.session_state.mode = None
+# Cache so its less annoying to load the data
+@st.cache_data
+def save_form_data(data):
+    return data
 
 # Centered Title using HTML and Markdown
 st.markdown(
@@ -37,7 +39,6 @@ with st.sidebar:
     2. **Information requested in the form** includes:
     """)
     st.markdown("""
-    - **'credit.policy'**: 1 if the customer meets the credit underwriting criteria of LendingClub.com, and 0 otherwise.
     - **'purpose'**: The purpose of the loan (e.g., "credit_card", "debt_consolidation", "educational", "major_purchase", "small_business", "all_other").
     - **'int.rate'**: The interest rate of the loan as a proportion (e.g., 11% is stored as 0.11). Higher rates indicate higher risk.
     - **'installment'**: The monthly installments owed by the borrower if the loan is funded.
@@ -55,7 +56,7 @@ with st.sidebar:
     3. **Submit the form** to view a success message and move on to the next page.
     """)
 
-# Manual entry option
+# Manual entry label
 st.title("Borrower Details Manual Entry")
 
 # Start form
@@ -63,7 +64,6 @@ with st.form("credit_data_form"):
     st.write("Please fill out the form below:")
     
     # Form fields
-    credit_policy = st.selectbox("Credit Policy", options=["Yes", "No"], help="If the customer meets the underwriting credit criteria of LendingClub.com")
     purpose = st.selectbox(
         "Purpose of Loan", 
         options=["credit_card", "debt_consolidation", "educational", "major_purchase", "small_business", "all_other"]
@@ -79,14 +79,16 @@ with st.form("credit_data_form"):
     inq_last_6mths = st.number_input("Inquiries in Last 6 Months", min_value=0, step=1)
     delinq_2yrs = st.number_input("Delinquencies in Last 2 Years", min_value=0, step=1)
     pub_rec = st.number_input("Public Derogatory Records", min_value=0, step=1)
-    ML_model = st.selectbox("Choose an ML model to run the data through", options = ["Decision Tree", "Random Forest", "ADA Boost", "XGBoost","Soft Voting (Recomended)"])
+    ML_model = st.selectbox("Choose an ML model to run the data through", options=["Decision Tree", "Random Forest", "ADA Boost", "XGBoost", "Soft Voting (Recommended)"])
     
     # Submit button
     submit_button = st.form_submit_button("Submit")
 
-    
 # Process the form data on submission
+
 if submit_button:
+
+    # Chat GPT gave us this feature but tis really fun so we put it in 
     st.balloons()  # Fun animation for feedback!
     st.success("🎉 Form Submitted Successfully!")
     
@@ -97,9 +99,8 @@ if submit_button:
     </h5>
     """, unsafe_allow_html=True)
 
-
+    # Save the form data to session state
     st.session_state.form_data = {
-        "credit.policy": 1 if credit_policy == "Yes" else 0,
         "purpose": purpose,
         "int.rate": int_rate,
         "installment": installment,
@@ -112,5 +113,5 @@ if submit_button:
         "inq.last.6mths": inq_last_6mths,
         "delinq.2yrs": delinq_2yrs,
         "pub.rec": pub_rec,
-        "Model": ML_model
+        "Model": ML_model,  
     }
