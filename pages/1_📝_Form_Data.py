@@ -3,6 +3,13 @@ import pandas as pd
 
 st.set_page_config(page_title="Credit Risk Assessment", page_icon="💳")
 
+
+if "form_data" not in st.session_state:
+    st.session_state.form_data = {}
+
+if "mode" not in st.session_state:
+    st.session_state.mode = None
+
 # Centered Title using HTML and Markdown
 st.markdown(
     """
@@ -91,19 +98,19 @@ if submit_button:
     """, unsafe_allow_html=True)
 
 
-st.session_state.form_data = {
-    "credit.policy": 1 if credit_policy == "Yes" else 0,
-    "purpose": purpose,
-    "int.rate": int_rate,
-    "installment": installment,
-    "log.annual.inc": log_annual_inc,
-    "dti": dti,
-    "fico": fico,
-    "days.with.cr.line": days_with_cr_line,
-    "revol.bal": revol_bal,
-    "revol.util": revol_util,
-    "inq.last.6mths": inq_last_6mths,
-    "delinq.2yrs": delinq_2yrs,
-    "pub.rec": pub_rec,
-    "Model": ML_model
-}
+    st.session_state.form_data = {
+        "credit.policy": 1 if credit_policy == "Yes" else 0,
+        "purpose": purpose,
+        "int.rate": int_rate,
+        "installment": installment,
+        "log.annual.inc": log_annual_inc,
+        "dti": dti,
+        "fico": fico,
+        "days.with.cr.line": days_with_cr_line,
+        "revol.bal": revol_bal,
+        "revol.util": revol_util,
+        "inq.last.6mths": inq_last_6mths,
+        "delinq.2yrs": delinq_2yrs,
+        "pub.rec": pub_rec,
+        "Model": ML_model
+    }

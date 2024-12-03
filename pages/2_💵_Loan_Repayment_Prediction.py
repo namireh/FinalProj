@@ -1,8 +1,16 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
+import pickle
 
 st.set_page_config(page_title="Loan Repayment Prediction", page_icon="💵")
+
+
+if "form_data" not in st.session_state:
+    st.session_state.form_data = {}
+
+if "mode" not in st.session_state:
+    st.session_state.mode = None
 
 # Centered Title for Prediction Page
 st.markdown(
@@ -21,45 +29,68 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-
-# Ensure Session State has the required data
-if "form_data" not in st.session_state:
-    st.warning("No form data found. Please fill out the form on the previous page.")
-    st.stop()
-
-# Accessing form data from Session State
 form_data = st.session_state.form_data
+# Ensure Session State has the required data
+if "form_data" not in st.session_state or not st.session_state.form_data:
+    st.warning("No form data found. Please fill out the form on the previous page.")
+    st.stop()   
 
 
+form_data = st.session_state.form_data
+x = form_data
+model_value = x.pop('Model')
+
+x = pd.DataFrame([form_data])
 
 df_main = pd.read_csv('loan_data.csv')
-df_main.drop(columns = "credit.policy")
-df_main.concat(form_data)
-
-pd.get_dummies(df_main)
-
-X_encoded = df_main.tail(1)
-
-print(X_encoded)
+df_main = df_main.drop(columns = "credit.policy", errors = 'coerce')
+combined = pd.concat([df_main,x])
+encoded = pd.get_dummies(df_main)
+X_encoded = encoded.tail(1)
 
 
+
+if model_value == "Decision Tree":
+
+    with open('DT.pickle', 'rb') as dt_file:
+        clf = pickle.load(dt_file)
+
+elif model_value == "Random Forest":
+
+    with open('RF.pickle', 'rb') as rf_file:
+        clf = pickle.load(rf_file)
+
+elif model_value == "Ada Boost":
+
+    with open('ADA.pickle', 'rb') as ada_file:
+        clf = pickle.load(ada_file)
+    
+elif model_value == "XGBoost":
+
+    with open('XGB.pickle', 'rb') as xgb_file:
+        clf = pickle.load(xgb_file)
+
+elif model_value == "Soft Voting (Recomended)":
+
+    with open('SV.pickle', 'rb') as SV_file:
+        clf = pickle.load(SV_file)
+
+
+prediction = clf.predict(X_encoded)
+confidence_score = clf.predict_proba(X_encoded).max()
 
 
 # Display the submitted form data (Optional)
 st.write("### Submitted Borrower Details:")
 st.json(form_data)
 
-# Prediction Logic (Placeholder: Replace with your ML model)
-mock_prediction = np.random.choice(["Repay", "Default"], p=[0.8, 0.2])  # Mock prediction
-confidence_score = np.random.uniform(0.7, 0.99)  # Mock confidence score
-
 # Display Prediction Results
 st.success("🎉 Prediction Generated!")
-st.write(f"**Prediction**: The borrower is likely to **{mock_prediction}** the loan.")
+st.write(f"**Prediction**: The borrower is likely to **{prediction}** the loan.")
 st.write(f"**Confidence Score**: {confidence_score:.2%}")
 
 # Optional: Add visual representation
-if mock_prediction == "Repay":
+if prediction == "1" or prediction == 1:
     st.markdown(
         """
         <h4 style="text-align: center; color: #4CAF50;">✅ Borrower is likely to repay the loan!</h4>
